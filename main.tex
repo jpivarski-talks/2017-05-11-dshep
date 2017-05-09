@@ -191,110 +191,141 @@ We're all here because we think that HEP can benefit from machine learning techn
 %% \end{itemize}
 %% \end{frame}
 
-\begin{frame}{}
-\begin{center}
-\LARGE \textcolor{darkblue}{direct to Numpy}
-\end{center}
-\end{frame}
+%% \begin{frame}{}
+%% \begin{center}
+%% \LARGE \textcolor{darkblue}{direct to Numpy}
+%% \end{center}
+%% \end{frame}
 
-\begin{frame}{Skip the middleman}
-\vspace{0.25 cm}
-root\_numpy is great if you have a lot of ROOT files and need to analyze them in Python.
+%% \begin{frame}{Skip the middleman}
+%% \vspace{0.25 cm}
+%% root\_numpy is great if you have a lot of ROOT files and need to analyze them in Python.
 
-\vspace{0.25 cm}
-\uncover<2->{But if you don't already have the ROOT files, generating and then converting them is awkward, especially if the dataset is large.}
+%% \vspace{0.25 cm}
+%% \uncover<2->{But if you don't already have the ROOT files, generating and then converting them is awkward, especially if the dataset is large.}
 
-\begin{uncoverenv}<3->
-\vspace{0.25 cm}
-\begin{block}{The Numpy format is extremely simple.}
-\begin{itemize}\setlength{\itemsep}{0.25 cm}
-\item<4-> a Numpy array is a plain C array interpreted by metadata {\small (data type,} {\footnotesize number of elements,} {\scriptsize endianness,} {\tiny C vs.\ Fortran-style stride\ldots)}
-\begin{itemize}
-\item you can wrap any region of memory as a Numpy array
-\end{itemize}
+%% \begin{uncoverenv}<3->
+%% \vspace{0.25 cm}
+%% \begin{block}{The Numpy format is extremely simple.}
+%% \begin{itemize}\setlength{\itemsep}{0.25 cm}
+%% \item<4-> a Numpy array is a plain C array interpreted by metadata {\small (data type,} {\footnotesize number of elements,} {\scriptsize endianness,} {\tiny C vs.\ Fortran-style stride\ldots)}
+%% \begin{itemize}
+%% \item you can wrap any region of memory as a Numpy array
+%% \end{itemize}
 
-\item<5-> a Numpy file is a literal copy of the array with a header
-\begin{itemize}
-\item you can write Numpy files with minimal code
-\end{itemize}
+%% \item<5-> a Numpy file is a literal copy of the array with a header
+%% \begin{itemize}
+%% \item you can write Numpy files with minimal code
+%% \end{itemize}
 
-\end{itemize}
-\end{block}
-\end{uncoverenv}
-\end{frame}
+%% \end{itemize}
+%% \end{block}
+%% \end{uncoverenv}
+%% \end{frame}
 
-\begin{frame}[fragile]{Examples of wrapping arrays}
-\vspace{0.25 cm}
-If PyROOT gives you an {\tt array.array}, wrap it like this:
+%% \begin{frame}[fragile]{Examples of wrapping arrays}
+%% \vspace{0.25 cm}
+%% If PyROOT gives you an {\tt array.array}, wrap it like this:
 
-\small
-\begin{minted}{python}
-    import numpy
-    numpy_array = numpy.frombuffer(array_from_root)
-\end{minted}
+%% \small
+%% \begin{minted}{python}
+%%     import numpy
+%%     numpy_array = numpy.frombuffer(array_from_root)
+%% \end{minted}
 
-\normalsize
-Now it has Numpy powers.
+%% \normalsize
+%% Now it has Numpy powers.
 
-\begin{uncoverenv}<2->
-\vspace{0.25 cm}
-As long as you perform in-place operations, like
+%% \begin{uncoverenv}<2->
+%% \vspace{0.25 cm}
+%% As long as you perform in-place operations, like
 
-\small
-\begin{minted}{python}
-    # overwrite all elements x with sin(x)
-    numpy.sin(numpy_array, numpy_array)
-    # set all values to 3.14
-    numpy_array[:] = 3.14
-\end{minted}
+%% \small
+%% \begin{minted}{python}
+%%     # overwrite all elements x with sin(x)
+%%     numpy.sin(numpy_array, numpy_array)
+%%     # set all values to 3.14
+%%     numpy_array[:] = 3.14
+%% \end{minted}
 
-\normalsize
-it will modify the same memory that ROOT is looking at.
-\end{uncoverenv}
+%% \normalsize
+%% it will modify the same memory that ROOT is looking at.
+%% \end{uncoverenv}
 
-\begin{uncoverenv}<3->
-\vspace{0.25 cm}
-\textcolor{darkblue}{With great power comes great responsibility:} if ROOT deletes this array and you continue to modify it, you will corrupt memory, causing a segmentation fault {\it at best.}
-\end{uncoverenv}
-\end{frame}
+%% \begin{uncoverenv}<3->
+%% \vspace{0.25 cm}
+%% \textcolor{darkblue}{With great power comes great responsibility:} if ROOT deletes this array and you continue to modify it, you will corrupt memory, causing a segmentation fault {\it at best.}
+%% \end{uncoverenv}
+%% \end{frame}
 
-\begin{frame}[fragile]{Examples of wrapping arrays}
-You can split a Python script into parallel processes using its builtin {\tt multiprocessing} module. These processes can share a block of memory, which you can wrap with Numpy.
+%% \begin{frame}[fragile]{Examples of wrapping arrays}
+%% You can split a Python script into parallel processes using its builtin {\tt multiprocessing} module. These processes can share a block of memory, which you can wrap with Numpy.
 
-\vspace{0.25 cm}
-See \textcolor{blue}{\underline{\url{https://goo.gl/NPwcSL}}} for an example.
-\end{frame}
+%% \vspace{0.25 cm}
+%% See \textcolor{blue}{\underline{\url{https://goo.gl/NPwcSL}}} for an example.
+%% \end{frame}
 
-\begin{frame}[fragile]{Examples of wrapping arrays}
-\vspace{0.5 cm}
-\hfill \includegraphics[height=3.5 cm]{knl-scaling.pdf}
+%% \begin{frame}[fragile]{Examples of wrapping arrays}
+%% \vspace{0.5 cm}
+%% \hfill \includegraphics[height=3.5 cm]{knl-scaling.pdf}
 
-\vspace{-3.5 cm}
-Even use non-standard allocators \\ (this one allocates memory on \\ Knight's Landing MCDRAM).
+%% \vspace{-3.5 cm}
+%% Even use non-standard allocators \\ (this one allocates memory on \\ Knight's Landing MCDRAM).
 
-\vspace{0.25 cm}
-\scriptsize
-\begin{minted}{python}
-import ctypes
-import numpy
+%% \vspace{0.25 cm}
+%% \scriptsize
+%% \begin{minted}{python}
+%% import ctypes
+%% import numpy
 
-ZILLION = 1000000
+%% ZILLION = 1000000
 
-libnuma = ctypes.cdll.LoadLibrary("libnuma.so")
-libnuma.numa_alloc_local.restype = ctypes.POINTER(ctypes.c_double)
-ptr = libnuma.numa_alloc_local(ctypes.c_size_t(ZILLION))
+%% libnuma = ctypes.cdll.LoadLibrary("libnuma.so")
+%% libnuma.numa_alloc_local.restype = ctypes.POINTER(ctypes.c_double)
+%% ptr = libnuma.numa_alloc_local(ctypes.c_size_t(ZILLION))
 
-ptr.__array_interface__ =
-    {"version": 3,
-     "typestr": numpy.ctypeslib._dtype(type(ptr.contents)).str,
-     "data": (ctypes.addressof(ptr.contents), False),
-     "shape": (ZILLION,)}
+%% ptr.__array_interface__ =
+%%     {"version": 3,
+%%      "typestr": numpy.ctypeslib._dtype(type(ptr.contents)).str,
+%%      "data": (ctypes.addressof(ptr.contents), False),
+%%      "shape": (ZILLION,)}
 
-asarray = numpy.array(ptr, copy=False)
-\end{minted}
-\end{frame}
+%% asarray = numpy.array(ptr, copy=False)
+%% \end{minted}
+%% \end{frame}
 
+%% \begin{frame}[fragile]{Quick 'n easy way to write to Numpy files}
+%% \begin{center}
+%% \textcolor{blue}{\underline{\url{https://github.com/diana-hep/c2numpy}}}
+%% \end{center}
 
+%% Pure-header C library: drop it in and write Numpy files.
+
+%% \vspace{0.25 cm}
+%% \scriptsize
+%% \begin{minted}{c++}
+%% #include "c2numpy.h"
+
+%% c2numpy_init(&writer, "output/tracks", 1000);
+%% c2numpy_addcolumn(&writer, "pt", C2NUMPY_FLOAT64);
+%% c2numpy_addcolumn(&writer, "eta", C2NUMPY_FLOAT64);
+%% c2numpy_addcolumn(&writer, "phi", C2NUMPY_FLOAT64);
+%% c2numpy_addcolumn(&writer, "dxy", C2NUMPY_FLOAT64);
+%% c2numpy_addcolumn(&writer, "dz", C2NUMPY_FLOAT64);
+
+%% ...
+
+%% for (auto track = tracks->cbegin();
+%%      track != tracks->end();
+%%      ++track) {
+%%   c2numpy_float64(&writer, track->pt());
+%%   c2numpy_float64(&writer, track->eta());
+%%   c2numpy_float64(&writer, track->phi());
+%%   c2numpy_float64(&writer, track->dxy());
+%%   c2numpy_float64(&writer, track->dz());
+%% }
+%% \end{minted}
+%% \end{frame}
 
 \begin{frame}{}
 \begin{center}
@@ -304,6 +335,18 @@ asarray = numpy.array(ptr, copy=False)
 \textcolor{darkblue}{\Large Avro/ProtoBuf/Thrift, Parquet, Arrow/Feather}
 \end{center}
 \end{frame}
+
+\begin{frame}{What about nested structure?}
+Numpy isn't appropriate (efficient) for anything but flat-flat ntuples: strictly columns of numbers, no {\tt\small std::vector<double>}!
+
+
+
+
+
+
+\end{frame}
+
+
 
 \begin{frame}{}
 \begin{center}
