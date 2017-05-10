@@ -176,7 +176,7 @@ array3 = root_numpy.tree2array(roottree,
 \begin{frame}{Worth noting\ldots}
 \vspace{0.25 cm}
 \begin{itemize}\setlength{\itemsep}{0.5 cm}
-\item Although root\_numpy loads whole branches into memory at once, it's possible to extend to {\it streaming} C++ APIs (hint: TensorFlow).
+\item Although root\_numpy currently loads whole branches into memory at once, it's possible to extend to {\it streaming} C++ APIs (hint: TensorFlow Queues).
 
 \item There are other extensions ``out there,'' such as this one:
 \begin{center}
