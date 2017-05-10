@@ -61,7 +61,7 @@
   morestring=[b]"""
 }
 
-\title[2017-05-11-dshep]{\bf \LARGE Data Plumbing}
+\title[2017-05-11-dshep]{\bf \LARGE Data plumbing: \\ moving data across frameworks}
 \author{Jim Pivarski}
 \institute{Princeton University -- DIANA}
 \date{May 11, 2017}
@@ -91,13 +91,13 @@
 We're all here because we think that HEP can benefit from machine learning techniques.
 
 \vfill
-\uncover<2->{The most advanced techniques are being developed outside of HEP using (what are becoming) industry standard tools.}
+\uncover<2->{The most advanced techniques are being developed \mbox{outside of HEP,\hspace{-1 cm}} using (what are becoming) industry standard tools.}
 
 \vfill
 \uncover<3->{\textcolor{darkblue}{Problem:} our HEP protocols and formats won't work with them without some modification or export.}
 
 \vfill
-\uncover<4->{\textcolor{darkblue}{That's what this talk is about.}}
+\uncover<4->{\textcolor{darkblue}{This talk is about solutions to that problem.}}
 \end{frame}
 
 \begin{frame}{}
@@ -126,9 +126,9 @@ We're all here because we think that HEP can benefit from machine learning techn
 \vfill
 \begin{columns}[t]
 \column{0.5\linewidth}
-ROOT is the standard for HEP data storage and processing.
+\textcolor{darkblue}{ROOT} is the standard for HEP data storage and processing.
 \column{0.5\linewidth}
-Numpy is the standard for the scientific Python ecosystem, including TensorFlow, Keras, {\small PyTorch,} {\footnotesize DyNet,} {\scriptsize MinPy,} {\tiny MXNet\ldots}
+\textcolor{darkblue}{Numpy} is the standard for the scientific Python ecosystem: {\small SciPy,} {\small Scikit-Learn,} {\footnotesize TensorFlow,} {\footnotesize Keras,} {\scriptsize PyTorch,} {\scriptsize DyNet,} {\tiny MinPy,} {\tiny MXNet\ldots}
 \end{columns}
 
 \vfill
@@ -146,7 +146,7 @@ Numpy is the standard for the scientific Python ecosystem, including TensorFlow,
 \end{frame}
 
 \begin{frame}[fragile]{Examples}
-\small
+\footnotesize
 \begin{minted}{python}
 import root_numpy
 
@@ -176,7 +176,7 @@ array3 = root_numpy.tree2array(roottree,
 \begin{frame}{Worth noting\ldots}
 \vspace{0.25 cm}
 \begin{itemize}\setlength{\itemsep}{0.5 cm}
-\item Although root\_numpy loads whole branches into memory as arrays, it would be possible to extend it to streaming C++ APIs (hint: TensorFlow).
+\item Although root\_numpy loads whole branches into memory at once, it's possible to extend to {\it streaming} C++ APIs (hint: TensorFlow).
 
 \item There are other extensions ``out there,'' such as this one:
 \begin{center}
@@ -206,8 +206,8 @@ root\_numpy is great if you have a lot of ROOT files and need to analyze them in
 
 \begin{uncoverenv}<3->
 \vspace{0.25 cm}
-\begin{block}{The Numpy format is extremely simple.}
-\begin{itemize}\setlength{\itemsep}{0.25 cm}
+\begin{block}{Fortunately, the Numpy format is extremely simple.}
+\begin{itemize}\setlength{\itemsep}{0.5 cm}
 \item<4-> a Numpy array is a plain C array interpreted by metadata {\small (data type,} {\footnotesize number of elements,} {\scriptsize endianness,} {\tiny C vs.\ Fortran-style stride\ldots)}
 \begin{itemize}
 \item you can wrap any region of memory as a Numpy array
@@ -270,10 +270,10 @@ See \textcolor{blue}{\underline{\url{https://goo.gl/NPwcSL}}} for an example.
 \textcolor{darkblue}{Another possible use:} point Python and a C++ framework (e.g.\ Athena or CMSSW) to the same shared memory to transfer data between them at runtime.
 
 \vspace{0.25 cm}
-This is known as a ``common block.'' \hspace{1 cm}{\tt :)}
+This is also known as a ``common block.'' \hspace{0.25 cm}{\tt :)}
 
 \vspace{0.25 cm}
-\textcolor{gray}{(A good implementation would be wrapped in a thread-safe, type-safe API.)}
+\textcolor{gray}{(A good implementation would be wrapped in a thread-safe, type-safe API, of course.)}
 \end{uncoverenv}
 \end{frame}
 
@@ -306,7 +306,7 @@ asarray = numpy.array(ptr, copy=False)
 \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{Quick 'n easy way to write to Numpy files}
+\begin{frame}[fragile]{Writing Numpy files is easy, too}
 \begin{center}
 \textcolor{blue}{\underline{\url{https://github.com/diana-hep/c2numpy}}}
 \end{center}
@@ -349,17 +349,18 @@ for (auto track = tracks->cbegin();
 \end{frame}
 
 \begin{frame}{What about nested structure?}
+\vspace{0.5 cm}
 Numpy isn't appropriate (efficient) for anything but flat-flat ntuples: strictly columns of numbers, no {\tt\small std::vector<double>}!
 
-\vspace{0.25 cm}
+\vfill
 \begin{uncoverenv}<2->
-ROOT pioneered efficient storage of nested, hierarchical data with built-in schema (TTrees), but today there are many options:
+ROOT pioneered efficient storage of nested, hierarchical data with built-in schema (TTrees), but today there are other options:
 
 \begin{center}
 \begin{tabular}{l l}
-row-wise (``unsplit'') & Avro, Thrift, ProtoBuf \\
-columnar (``split'') & Parquet, Feather \\
-in-memory & Arrow
+\textcolor{darkblue}{row-wise (``unsplit'')} & Avro, Thrift, ProtoBuf \\
+\textcolor{darkblue}{columnar (``split'')} & Parquet, Feather \\
+\textcolor{darkblue}{in-memory} & Arrow
 \end{tabular}
 \end{center}
 \end{uncoverenv}
@@ -381,7 +382,7 @@ All of these formats are interconvertable and accessible in dozens of programmin
 \item[record:] structs whose fields are any of the above
 \item[union:] one type {\it or} another type (tagged)
 \end{description}
-\textcolor{darkblue}{but no pointers/TRefs or class methods.}
+\textcolor{darkblue}{but no pointers/TRefs or class methods (functions).}
 \end{frame}
 
 \begin{frame}{Automated conversion}
@@ -390,10 +391,10 @@ All of these formats are interconvertable and accessible in dozens of programmin
 \textcolor{blue}{\underline{\url{https://github.com/diana-hep/rootconverter}}}
 \end{center}
 
-is a {\it defunct} software package that converted ROOT files, including any nested classes, into Avro format. It mapped ROOT's {\tt\small TStreamerInfo} onto the corresponding abstract data types.
+is an {\it unmaintained} software package that converted ROOT files, including any nested classes, into Avro format. It mapped ROOT's {\tt\small TStreamerInfo} onto the corresponding abstract data types.
 
 \vfill
-It could be resurrected or repurposed if there's a need.
+It could be resurrected or repurposed if there's a need: the point is that this is {\it possible.}
 \end{frame}
 
 \begin{frame}{}
@@ -409,7 +410,7 @@ This was developed as part of a project to perform a CMS analysis in Apache Spar
 \textcolor{blue}{\underline{\url{https://cms-big-data.github.io/}}}
 \end{center}
 
-Last year, we converted all data from ROOT to Avro because Spark recognizes the Avro format.
+Last year, we converted all data from ROOT to Avro because Spark recognizes the Avro format (previous page).
 
 \vfill
 \textcolor{darkblue}{This year, we're using a pure Java implementation of the ROOT format to load data directly into Spark.}
@@ -633,19 +634,40 @@ roothist2.Draw()
 \end{uncoverenv}
 \end{frame}
 
+\begin{frame}{Not just Spark}
+\vspace{0.5 cm}
+root4j (ROOT reader) is separate from spark-root.
+
+\vfill
+root4j opens a door to {\it all} the Java-based big data tools.
+
+\vfill
+As far as I'm aware, it is one of only five ROOT readers:
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{r | l}
+standard ROOT & C++ \\
+JsRoot        & JavaScript\hspace{0.75 cm} \\
+root4j        & Java \\
+RIO in GEANT  & C++ \\
+go-hep        & go
+\end{tabular}
+\end{center}
+\end{frame}
+
 \begin{frame}{Conclusing remarks}
 \vfill
 \vfill
-Perhaps you saw something here and said,
+\textcolor{darkblue}{Perhaps you saw something here and thought,}
 \begin{itemize}
-\item ``I can use that and avoid my awful work-around!'' or
-\item ``I didn't think that was possible! Now I can do something I wouldn't have considered before.'' or
-\item ``What I want to do is possible, but it will take some development.''
+\item ``I can use that to avoid my awful work-around!'' \textcolor{darkblue}{or}
+\item ``I didn't think that was possible! Now I can do something I wouldn't have considered before,'' \textcolor{darkblue}{or}
+\item ``What I want to do is possible, but it will take some work.''
 \end{itemize}
 
 \vfill
 \begin{uncoverenv}<2->
-If so, contact me and I may be able to help you. I know or am the author of several of these packages, and can help you get started if you need to develop something new.
+If so, contact me and I may be able to help. I know or am the author of several of these packages, and can help you get started if you need to develop something new.
 
 \vfill
 \begin{center}
